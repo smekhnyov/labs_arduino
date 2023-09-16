@@ -9,6 +9,28 @@
 #define DELAY2 1000
 #define DELAY3 800
 
+#define SYM_A SEG_E | SEG_F | SEG_A | SEG_B | SEG_C | SEG_G
+#define SYM_B SEG_F | SEG_E | SEG_D | SEG_C | SEG_G
+#define SYM_C SEG_D | SEG_E | SEG_F | SEG_A
+#define SYM_D SEG_G | SEG_E | SEG_D | SEG_C | SEG_B
+#define SYM_E SEG_A | SEG_F | SEG_G | SEG_E | SEG_D
+#define SYM_F SEG_A | SEG_F | SEG_G | SEG_E
+#define SYM_G SEG_A | SEG_F | SEG_E | SEG_D | SEG_C
+#define SYM_H (SEG_F | SEG_G | SEG_B | SEG_E | SEG_C)
+#define SYM_I SEG_F | SEG_E
+#define SYM_J SEG_D | SEG_C | SEG_B
+#define SYM_L SEG_F | SEG_E | SEG_D
+#define SYM_N SEG_E | SEG_G | SEG_C
+#define SYM_O SEG_E | SEG_G | SEG_C | SEG_D
+#define SYM_P SEG_E | SEG_F | SEG_A | SEG_B | SEG_G
+#define SYM_Q SEG_F | SEG_A | SEG_B | SEG_G | SEG_C
+#define SYM_R SEG_E | SEG_G
+#define SYM_T SEG_F | SEG_G | SEG_E | SEG_D
+#define SYM_U SEG_F | SEG_E | SEG_D | SEG_C | SEG_B
+#define SYM_Y SEG_F | SEG_G | SEG_B | SEG_C | SEG_D
+#define SYM_SPACE 0
+#define SYM_MINUS SEG_G
+
 TM1637Display display(CLK, DIO);
 
 void setup()
@@ -18,10 +40,12 @@ void setup()
 void loop()
 {
   display.setBrightness(0x0f);
-  //task1();
-  //task2();
+  display.clear();
+  task1();
+  display.clear();
+  task2();
+  display.clear();
   task3();
-  while(1);
 }
 
 void task1()
@@ -31,12 +55,11 @@ void task1()
     display.showNumberDec(i, false, 3, 0);
     delay(DELAY1);
   }
-  while(1);
 }
 
 void task2()
 {
-    const uint8_t minus[] = { SEG_G };
+    const uint8_t minus[] = { SYM_MINUS };
     for (int i = -200; i <= 200; i += 20)
     {
         display.clear();
@@ -53,24 +76,13 @@ void task2()
 
 void task3()
 {
-  uint8_t text[] = {
-    SEG_F | SEG_A | SEG_B | SEG_G | SEG_C,
-    SEG_F | SEG_E | SEG_D | SEG_C | SEG_B,
-    SEG_A | SEG_F | SEG_G | SEG_E | SEG_D,
-    SEG_F | SEG_E | SEG_D | SEG_C | SEG_B,
-    SEG_A | SEG_F | SEG_G | SEG_E | SEG_D,
-    0,
-    SEG_A | SEG_F | SEG_G | SEG_E,
-    SEG_F | SEG_E | SEG_D | SEG_C | SEG_B,
-    SEG_F | SEG_E | SEG_D,
-    SEG_F | SEG_E | SEG_D,
-    0
-  };
+  uint8_t text[] = { SYM_Q, SYM_U, SYM_E, SYM_U, SYM_E, SYM_SPACE, SYM_F, SYM_U, SYM_L, SYM_L, SYM_SPACE, SYM_SPACE, SYM_SPACE, SYM_SPACE,};
+  int size_text = sizeof(text)/sizeof(text[0])-4;
   int i = 0;
   while(1)
   {
     display.setSegments(text+i);
-    i = (i+1)%10;
+    i = (i+1)%size_text;
     delay(DELAY3);
   }
 }
